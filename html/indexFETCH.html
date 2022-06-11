@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <title>CRUD API REST FETCH</title>
+</head>
+
+<body>
+    <h1>CRUD API REST FETCH</h1>
+    <section class="crud">
+        <article>
+            <h2 class="crud-title">Agregar</h2>
+            <form class="crud-form">
+                <input type="text" name="nombre" placeholder="Ingresar nombre" required>
+                <br>
+                <input type="text" name="constelacion" placeholder="Ingresar constelacion" required>
+                <br>
+                <input type="submit" value="Enviar">
+                <input type="hidden" name="action">
+            </form>
+        </article>
+        <article>
+            <table class="table table-success table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">Nombre</th>
+                        <th scope="col">Contelacion</th>
+                        <th scope="col">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+        </article>
+    </section>
+    <template id="crud-template">
+        <tr>
+            <th class="name"></th>
+            <td class="constellation"></td>
+            <td>
+                <button class="edit" type="button" class="btn btn-success">Editar</button>
+                <button class="delete" type="button" class="btn btn-danger">Eliminar</button>
+            </td>
+        </tr>
+    </template>
+    <Script>
+        const d = document,
+            $table = d.querySelector(".crud-table"),
+            $form = d.querySelector(".crud-form"),
+            $title = d.querySelector(".crud-title"),
+            $template = d.querySelector(".crud-template").content,
+            $fragment = d.createDocumentFragment()
+    </Script>
+</body>
+
+</html>
