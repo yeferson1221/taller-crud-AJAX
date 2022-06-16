@@ -37,12 +37,35 @@ const getAll = async() => {
 
 d.addEventListener("DOMContentLoaded", getAll);
 
+
+/**
+ * [
+ *  contiene la funsion asincrona dentro de esta se ejecutan los  metodos 
+ *  eliminar actualizar agregar 
+ * ]
+ * @version [1,0.0]
+ *
+ * @author [Yeferson Valencia, alejandro.yandd@gmail.com]
+ * @since [1,0,0]
+ *
+ */
 d.addEventListener("submit", async e => {
     if (e.target === $form) {
         e.preventDefault();
 
         if (!e.target.id.value) {
-            //Create - POST
+            /**
+             * [
+             *  nos pérmite agregar un nuevo nombre y constealcion,adicional tiene el try  catch para 
+             *  el manejo de errores en el metodo ejecutado 
+             * ]
+             * @version [1,0.0]
+             *
+             * @author [Yeferson Valencia, alejandro.yandd@gmail.com]
+             * @since [1,0,0]
+             *
+             */
+
             try {
                 let options = {
                         method: "POST",
@@ -68,7 +91,17 @@ d.addEventListener("submit", async e => {
                 $form.insertAdjacentHTML("afterend", `<p><b>Error ${err.status}: ${message}</b></p>`);
             }
         } else {
-            //Update - PUT
+            /**
+             * [
+             *  nos pérmite editar con el id el nombre y la constelacion, adicional tiene el try  catch para 
+             *  el manejo de errores
+             * ]
+             * @version [1,0.0]
+             *
+             * @author [Yeferson Valencia, alejandro.yandd@gmail.com]
+             * @since [1,0,0]
+             *
+             */
             try {
                 let options = {
                         method: "PUT",
@@ -109,7 +142,17 @@ d.addEventListener("click", async e => {
         let isDelete = confirm(`¿Estás seguro de eliminar el id ${e.target.dataset.id}?`);
 
         if (isDelete) {
-            //Delete - DELETE
+            /**
+             * [
+             *  nos permite eliminar por id el nombre y la contelacion adicional tiene el try  catch para 
+             *  el manejo de errores
+             * ]
+             * @version [1,0.0]
+             *
+             * @author [Yeferson Valencia, alejandro.yandd@gmail.com]
+             * @since [1,0,0]
+             *
+             */
             try {
                 let options = {
                         method: "DELETE",

@@ -34,36 +34,6 @@
       "nombre": "Aldebaran",
       "constelacion": "Tauro",
       "id": 7
-    },
-    {
-      "nombre": "Saga",
-      "constelacion": "Geminis",
-      "id": 8
-    },
-    {
-      "nombre": "Máscara de Muerte",
-      "constelacion": "Cancer",
-      "id": 9
-    },
-    {
-      "nombre": "Aioria",
-      "constelacion": "Leo",
-      "id": 10
-    },
-    {
-      "nombre": "Shaka",
-      "constelacion": "Virgo",
-      "id": 11
-    },
-    {
-      "nombre": "Dohko",
-      "constelacion": "Libra",
-      "id": 12
-    },
-    {
-      "nombre": "Yefer",
-      "constelacion": "Virgo",
-      "id": 13
     }
   ],
   "dioses": [
