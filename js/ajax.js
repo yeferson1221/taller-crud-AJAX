@@ -1,167 +1,117 @@
-/* **********     Curso JavaScript: 106. AJAX: Objeto XMLHttpRequest - #jonmircha     ********** */
-(() => {
-  const xhr = new XMLHttpRequest(),
-    $xhr = document.getElementById("xhr"),
-    $fragment = document.createDocumentFragment();
+const d = document,
+    $table = d.querySelector(".table"),
+    $form = d.querySelector(".crud-form"),
+    $title = d.querySelector(".crud-title"),
+    $template = d.getElementById("crud-template").content,
+    $fragment = d.createDocumentFragment()
 
-  xhr.addEventListener("readystatechange", (e) => {
-    if (xhr.readyState !== 4) return;
+const ajax = (options) => {
+    let {
+        url,
+        method,
+        success,
+        error,
+        data
+    } = options;
+    const xhr = new XMLHttpRequest();
 
-    //console.log(xhr);
-
-    if (xhr.status >= 200 && xhr.status < 300) {
-      //console.log("éxito");
-      //console.log(xhr.responseText);
-      //$xhr.innerHTML = xhr.responseText;
-      let json = JSON.parse(xhr.responseText);
-      //console.log(json);
-
-      json.forEach((el) => {
-        const $li = document.createElement("li");
-        $li.innerHTML = `${el.name} -- ${el.email} -- ${el.phone}`;
-        $fragment.appendChild($li);
-      });
-
-      $xhr.appendChild($fragment);
-    } else {
-      //console.log("error");
-      let message = xhr.statusText || "Ocurrió un error";
-      $xhr.innerHTML = `Error ${xhr.status}: ${message}`;
-    }
-
-    //console.log("Este mensaje cargará de cualquier forma");
-  });
-
-  xhr.open("GET", "https://jsonplaceholder.typicode.com/users");
-  //xhr.open("GET", "assets/users.json");
-
-  xhr.send();
-})();
-
-/* **********     Curso JavaScript: 107. AJAX: API Fetch - #jonmircha     ********** */
-(() => {
-  const $fetch = document.getElementById("fetch"),
-    $fragment = document.createDocumentFragment();
-
-  //fetch("assets/users.json")
-  fetch("https://jsonplaceholder.typicode.com/users")
-    /* .then((res) => {
-      console.log(res);
-      return res.ok ? res.json() : Promise.reject(res);
-    }) */
-    .then((res) => (res.ok ? res.json() : Promise.reject(res)))
-    .then((json) => {
-      //console.log(json);
-      //$fetch.innerHTML = json;
-      json.forEach((el) => {
-        const $li = document.createElement("li");
-        $li.innerHTML = `${el.name} -- ${el.email} -- ${el.phone}`;
-        $fragment.appendChild($li);
-      });
-
-      $fetch.appendChild($fragment);
-    })
-    .catch((err) => {
-      //console.log(err);
-      let message = err.statusText || "Ocurrió un error";
-      $fetch.innerHTML = `Error ${err.status}: ${message}`;
-    })
-    .finally(() => {
-      //console.log("Esto se ejecutará independientemente del resultado de la Promesa Fetch")
+    xhr.addEventListener("readystatechange", e => {
+        if (xhr.readyState !== 4) return;
+        if (xhr.status >= 200 && xhr.status < 300) {
+            let json = JSON.parse(xhr.responseText);
+            success(json);
+        } else {
+            let message = xhr.statusText || "Ocurrio un Error";
+            error(`Error ${xhr.status}: ${message}`);
+        }
     });
-})();
 
-/* **********     Curso JavaScript: 108. AJAX: API Fetch + Async-Await - #jonmircha     ********** */
-(() => {
-  const $fetchAsync = document.getElementById("fetch-async"),
-    $fragment = document.createDocumentFragment();
+    xhr.open(method || "GET", url);
+    xhr.setRequestHeader("Content-type", "application/json; charset=utf-8");
+    xhr.send(JSON.stringify(data));
+}
+const getAll = () => {
+    ajax({
+        method: "GET",
+        url: "http://localhost:5000/santos",
+        success: (res) => {
+            console.log(res)
+            res.forEach(el => {
+                $template.querySelector(".name").textContent = el.nombre;
+                $template.querySelector(".constellation").textContent = el.constelacion;
+                $template.querySelector(".edit").dataset.id = el.id;
+                $template.querySelector(".edit").dataset.name = el.nombre;
+                $template.querySelector(".edit").dataset.constellation = el.constelacion;
+                $template.querySelector(".delete").dataset.id = el.id;
 
-  async function getData() {
-    try {
-      let res = await fetch("https://jsonplaceholder.typicode.com/users"),
-        json = await res.json();
+                let $clone = d.importNode($template, true);
+                $fragment.appendChild($clone);
+            });
 
-      //console.log(res, json);
+            $table.querySelector("tbody").appendChild($fragment);
 
-      //if (!res.ok) throw new Error("Ocurrio un Error al solicitar los Datos");
-      if (!res.ok) throw { status: res.status, statusText: res.statusText };
+        },
+        error: (err) => {
+            console.log(err)
+            $table.insertAdjacentHTML("afterend", `<p><b>${err}</b></p>`);
+        },
+        data: null
 
-      json.forEach((el) => {
-        const $li = document.createElement("li");
-        $li.innerHTML = `${el.name} -- ${el.email} -- ${el.phone}`;
-        $fragment.appendChild($li);
-      });
-
-      $fetchAsync.appendChild($fragment);
-    } catch (err) {
-      //console.log(err);
-      let message = err.statusText || "Ocurrió un error";
-      $fetchAsync.innerHTML = `Error ${err.status}: ${message}`;
-    } finally {
-      //console.log("Esto se ejecutará independientemente del try... catch");
-    }
-  }
-
-  getData();
-})();
-
-/* **********     Curso JavaScript: 109. AJAX: Librería Axios - #jonmircha     ********** */
-(() => {
-  const $axios = document.getElementById("axios"),
-    $fragment = document.createDocumentFragment();
-
-  axios
-    //.get("assets/users.json")
-    .get("https://jsonplaceholder.typicode.com/users")
-    .then((res) => {
-      //console.log(res);
-      let json = res.data;
-
-      json.forEach((el) => {
-        const $li = document.createElement("li");
-        $li.innerHTML = `${el.name} -- ${el.email} -- ${el.phone}`;
-        $fragment.appendChild($li);
-      });
-
-      $axios.appendChild($fragment);
     })
-    .catch((err) => {
-      //console.log(err.response);
-      let message = err.response.statusText || "Ocurrió un error";
-      $axios.innerHTML = `Error ${err.response.status}: ${message}`;
-    })
-    .finally(() => {
-      //console.log("Esto se ejecutará independientemente del resultado Axios");
-    });
-})();
+}
+d.addEventListener("DOMContentLoaded", getAll);
 
-/* **********     Curso JavaScript: 110. AJAX: Librería Axios + Async-Await - #jonmircha     ********** */
-(() => {
-  const $axiosAsync = document.getElementById("axios-async"),
-    $fragment = document.createDocumentFragment();
+d.addEventListener("submit", e => {
+    if (e.target === $form) {
+        e.preventDefault();
 
-  async function getData() {
-    try {
-      let res = await axios.get("https://jsonplaceholder.typicode.com/users"),
-        json = await res.data;
-
-      //console.log(res, json);
-
-      json.forEach((el) => {
-        const $li = document.createElement("li");
-        $li.innerHTML = `${el.name} -- ${el.email} -- ${el.phone}`;
-        $fragment.appendChild($li);
-      });
-
-      $axiosAsync.appendChild($fragment);
-    } catch (err) {
-      //console.log(err.response);
-      let message = err.response.statusText || "Ocurrió un error";
-      $axiosAsync.innerHTML = `Error ${err.response.status}: ${message}`;
-    } finally {
-      //console.log("Esto se ejecutará independientemente del try... catch");
+        if (!e.target.id.value) {
+            //Create - POST
+            ajax({
+                url: "http://localhost:5000/santos",
+                method: "POST",
+                success: (res) => location.reload(),
+                error: (err) => $form.insertAdjacentHTML("afterend", `<p><b>${err}</b></p>`),
+                data: {
+                    nombre: e.target.nombre.value,
+                    constelacion: e.target.constelacion.value
+                }
+            });
+        } else {
+            //Update - PUT
+            ajax({
+                url: `http://localhost:5000/santos/${e.target.id.value}`,
+                method: "PUT",
+                success: (res) => location.reload(),
+                error: (err) => $form.insertAdjacentHTML("afterend", `<p><b>${err}</b></p>`),
+                data: {
+                    nombre: e.target.nombre.value,
+                    constelacion: e.target.constelacion.value
+                }
+            });
+        }
     }
-  }
+});
 
-  getData();
-})();
+d.addEventListener("click", e => {
+    if (e.target.matches(".edit")) {
+        $title.textContent = "Editar";
+        $form.nombre.value = e.target.dataset.name;
+        $form.constelacion.value = e.target.dataset.constellation;
+        $form.id.value = e.target.dataset.id;
+    }
+
+    if (e.target.matches(".delete")) {
+        let isDelete = confirm(`¿Estás seguro de eliminar el id ${e.target.dataset.id}?`);
+
+        if (isDelete) {
+            //Delete - DELETE
+            ajax({
+                url: `http://localhost:5000/santos/${e.target.dataset.id}`,
+                method: "DELETE",
+                success: (res) => location.reload(),
+                error: (err) => alert(err)
+            });
+        }
+    }
+})
